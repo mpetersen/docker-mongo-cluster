@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  mongodb_1:
+    image: mongo:5
+    hostname: mongodb_1
+    command: --replSet rs1 --keyFile /etc/mongo-replication.key
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-replication.key:/etc/mongo-replication.key
+      - mongodb_data_1:/data/db
+
+  mongodb_2:
+    image: mongo:5
+    hostname: mongodb_2
+    command: --replSet rs1 --keyFile /etc/mongo-replication.key
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - 27018:27017
+    volumes:
+      - ./mongo-replication.key:/etc/mongo-replication.key
+      - mongodb_data_2:/data/db
+    depends_on:
+      - mongodb_1
+
+  mongodb_3:
+    image: mongo:5
+    hostname: mongodb_3
+    command: --replSet rs1 --keyFile /etc/mongo-replication.key
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - 27019:27017
+    volumes:
+      - ./mongo-replication.key:/etc/mongo-replication.key
+      - mongodb_data_3:/data/db
+    depends_on:
+      - mongodb_1
+
+volumes:
+  mongodb_data_1:
+  mongodb_data_2:
+  mongodb_data_3:
